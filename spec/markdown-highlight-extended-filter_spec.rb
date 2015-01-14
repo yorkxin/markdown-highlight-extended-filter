@@ -1,4 +1,5 @@
 require 'markdown-highlight-extended-filter'
+require 'pry-byebug'
 
 RSpec.describe "MarkdownHighlightExtendedFilter" do
   let(:pipeline) {
@@ -21,7 +22,7 @@ TEXT
 
     it "renders correctly" do
       expect(rendered).to eq <<-HTML
-<figure class='code'><pre lang="plain">def abc
+<figure class='code'><pre>def abc
   123
 end</pre></figure>
 HTML
@@ -103,6 +104,22 @@ TEXT
 <figure class='code'><figcaption><span>Hello World</span><a href='http://www.example.com'>Example</a></figcaption><div class="highlight highlight-ruby"><pre><span class="k">def</span> <span class="nf">abc</span>
   <span class="mi">123</span>
 <span class="k">end</span>
+</pre></div></figure>
+HTML
+    end
+  end
+
+  describe "no sanitization" do
+    let(:text) { <<-TEXT
+```html
+<input name="test" value="hello" />
+```
+TEXT
+    }
+
+    it "renders correctly" do
+      expect(rendered).to eq <<-HTML
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight highlight-html"><pre><span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;test&quot;</span> <span class="na">value=</span><span class="s">&quot;hello&quot;</span> <span class="nt">/&gt;</span>
 </pre></div></figure>
 HTML
     end

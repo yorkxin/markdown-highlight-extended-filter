@@ -1,15 +1,12 @@
 require "html/pipeline"
 require "pygments.rb"
+require "linguist"
 
 # Stolen from https://github.com/imathis/octopress/blob/master/plugins/backtick_code_block.rb
 # (MIT License)
 class MarkdownHighlightExtendedFilter < HTML::Pipeline::TextFilter
   AllOptions = /([^\s]+)\s+(.+?)\s+(https?:\/\/\S+|\/\S+)\s*(.+)?/i
   LangCaption = /([^\s]+)\s*(.+)?/i
-
-  PIPELINE = HTML::Pipeline.new [
-    HTML::Pipeline::SyntaxHighlightFilter
-  ]
 
   def call
     format_syntax(@text)
@@ -48,6 +45,15 @@ class MarkdownHighlightExtendedFilter < HTML::Pipeline::TextFilter
   end
 
   def highlight_code(code, lang)
-    PIPELINE.call("<pre lang='#{lang}'>#{code}</pre>")[:output].to_s
+    if lexer = lexer_for(lang)
+      lexer.highlight(code, :options => { :cssclass => "highlight highlight-#{lang}" })
+    else
+      "<pre>#{code}</pre>"
+    end
+  end
+
+  # https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/syntax_highlight_filter.rb#L38
+  def lexer_for(lang)
+    (Linguist::Language[lang] && Linguist::Language[lang].lexer) || Pygments::Lexer[lang]
   end
 end
