@@ -26,6 +26,25 @@ Or install it without Gemfile (like, Jekyll project):
 
 ## Usage
 
+```ruby
+pipeline = HTML::Pipeline.new [
+  MarkdownHighlightExtendedFilter,
+  HTML::Pipeline::MarkdownFilter
+]
+
+pipeline.call(File.read("example.md"))[:output]
+```
+
+example.md:
+
+    Here is a sample:
+
+    ```ruby test.rb
+    def abc
+      123
+    end
+    ```
+
 ### Jekyll site usage
 
 This filter is for HTML::Pipeline, so you must use HTML::Pipeline to
@@ -45,6 +64,15 @@ html_pipeline:
     - "MarkdownHighlightExtendedFilter" # Must put before markdownfilter
     - "markdownfilter"
 ```
+
+## Known Issues
+
+Unsupported features:
+
+* Line Numbers
+* Line Highlights
+
+These were defined in [Octopress's document](http://octopress.org/docs/blogging/code/) as additional options. (PR welcome!)
 
 ## Special Thanks
 
