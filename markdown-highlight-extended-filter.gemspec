@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "markdown-highlight-extended-filter"
-  spec.version       = "0.0.1"
+  spec.version       = "1.0.0"
   spec.authors       = ["Yu-Cheng Chuang"]
   spec.email         = ["ducksteven@gmail.com"]
   spec.summary       = %q{HTML::Pipeline filter for Octopress-flavored syntax highlighting}
