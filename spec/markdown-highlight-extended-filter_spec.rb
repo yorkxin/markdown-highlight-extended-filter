@@ -119,7 +119,7 @@ TEXT
 
     it "renders correctly" do
       expect(rendered).to eq <<-HTML
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight highlight-html"><pre><span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;test&quot;</span> <span class="na">value=</span><span class="s">&quot;hello&quot;</span> <span class="nt">/&gt;</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight highlight-html"><pre><span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">"test"</span> <span class="na">value=</span><span class="s">"hello"</span> <span class="nt">/&gt;</span>
 </pre></div></figure>
 HTML
     end

@@ -1,6 +1,5 @@
 require "html/pipeline"
-require "pygments.rb"
-require "linguist"
+require "rouge"
 
 # Stolen from https://github.com/imathis/octopress/blob/master/plugins/backtick_code_block.rb
 # (MIT License)
@@ -45,15 +44,18 @@ class MarkdownHighlightExtendedFilter < HTML::Pipeline::TextFilter
   end
 
   def highlight_code(code, lang)
-    if lexer = lexer_for(lang)
-      lexer.highlight(code, :options => { :cssclass => "highlight highlight-#{lang}" })
+    if lexer = lexer_for(lang, code)
+      # XXX: Rouge wrapper `<pre css_class><code>` is different from
+      # what pygments generates `<div css_class><pre>`.
+      # To keep compatibility, we don't use Rouge's warp, and wrap it manually.
+      html = Rouge::Formatters::HTML.format(lexer.lex(code), :wrap => false)
+      %Q{<div class="highlight highlight-#{lexer.tag}"><pre>#{html}\n</pre></div>}
     else
       "<pre>#{code}</pre>"
     end
   end
 
-  # https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/syntax_highlight_filter.rb#L38
-  def lexer_for(lang)
-    (Linguist::Language[lang] && Linguist::Language[lang].lexer) || Pygments::Lexer[lang]
+  def lexer_for(lang, code)
+    Rouge::Lexer.find(lang)
   end
 end
